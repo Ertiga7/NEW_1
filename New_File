@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout from scm') {
+            steps {
+                git credentialsId: 'e7f1c4fb-3b54-4647-98a4-53498fbb1599', url: 'https://github.com/Ertiga7/NEW_1.git'
+            }
+        }
+            stage('docker build') {
+            steps {
+                bat 'docker build -t new1 .'
+            }
+        }
+            stage('Run') {
+            steps {
+                bat 'docker run -t new1'
+            }
+        }
+        stage('Authentication') {
+            steps {
+            bat 'docker tag new1 gaikar/new1:%BUILD_ID%'
+        }
+    }
+            stage('Push') { 
+               steps {
+                   bat 'docker push gaikar/new1:%BUILD_ID%'
+               }
+  }
+}
+
+}
